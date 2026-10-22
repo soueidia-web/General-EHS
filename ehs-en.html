@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="en" dir="ltr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>General EHS RIM-HSE</title><link rel="icon" href="img/emblem.png"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;800&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@500&display=swap"><style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}
+
+/* Layout: single centred column, one step on screen at a time, safety-sign green as the only accent */
+:root{
+  --bg:#f2f6f5; --surface:#ffffff; --fg:#14211b; --muted:#56665e; --line:#d5dfd9;
+  --accent:#00877b; --accent-fg:#ffffff; --accent-soft:#dff3f0; --plate:#ffffff;
+  --bad:#b3261e; --bad-soft:#fbe7e5; --warn:#8a5a00; --warn-soft:#fff3d6;
+  --display:"Archivo","Arial Narrow",Arial,sans-serif;
+  --body:"Source Sans 3","Segoe UI",Roboto,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1613; --surface:#17211c; --fg:#e6efe9; --muted:#9fb1a7; --line:#2b3a32;
+  --accent:#3cc9b8; --accent-fg:#04201c; --accent-soft:#123430;
+  --bad:#ff8a80; --bad-soft:#3a1a18; --warn:#f2c35b; --warn-soft:#33290f; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1613; --surface:#17211c; --fg:#e6efe9; --muted:#9fb1a7; --line:#2b3a32;
+  --accent:#3cc9b8; --accent-fg:#04201c; --accent-soft:#123430;
+  --bad:#ff8a80; --bad-soft:#3a1a18; --warn:#f2c35b; --warn-soft:#33290f; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font:17px/1.55 var(--body);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px}
+.wrap{max-width:680px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+img.emblem{width:44px;height:44px;flex:none;display:block}
+.logo-card{background:var(--plate);border:1px solid var(--line);border-radius:10px;padding-block:22px;padding-inline:16px;display:flex;justify-content:center}
+.logo-card img{width:100%;max-width:260px;height:auto;display:block}
+header.brand{display:flex;align-items:center;gap:12px}
+.sign{width:44px;height:44px;flex:none;background:var(--accent);border-radius:6px;position:relative}
+.sign::before,.sign::after{content:"";position:absolute;background:var(--accent-fg);left:50%;top:50%;transform:translate(-50%,-50%)}
+.sign::before{width:26px;height:8px}.sign::after{width:8px;height:26px}
+.brand h1{font:800 1.25rem/1.15 var(--display);margin:0;letter-spacing:.01em;text-wrap:balance}
+.brand p{margin:0;color:var(--muted);font-size:.9rem}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:22px;display:flex;flex-direction:column;gap:14px}
+h2{font:800 1.5rem/1.2 var(--display);margin:0;text-wrap:balance}
+h3{font:600 1.05rem/1.3 var(--display);margin:0}
+p{margin:0}
+.eyebrow{font:600 .75rem/1 var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.muted{color:var(--muted)}
+ul.pts{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:6px}
+.key{background:var(--accent-soft);border-radius:8px;padding:12px 14px;font-weight:600}
+.caution{background:var(--warn-soft);color:var(--fg);border-radius:8px;padding:12px 14px}
+.caution b{color:var(--warn)}
+label{font-weight:600;font-size:.95rem;display:flex;flex-direction:column;gap:6px}
+input[type=text]{font:inherit;padding:11px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--fg)}
+input:focus-visible,button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.row.end{justify-content:space-between}
+button{font:600 1rem var(--body);border-radius:8px;padding:12px 18px;cursor:pointer;border:1px solid var(--line);background:var(--surface);color:var(--fg)}
+button.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
+button:disabled{opacity:.45;cursor:not-allowed}
+.bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden}
+.bar>i{display:block;height:100%;background:var(--accent);transition:width .3s}
+.meta{display:flex;justify-content:space-between;font-size:.85rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{text-align:left;font-weight:400;display:flex;gap:12px;align-items:flex-start;padding:12px 14px}
+.opt .l{font:600 .85rem var(--mono);color:var(--muted);flex:none;padding-top:2px}
+.opt.sel{border-color:var(--accent);background:var(--accent-soft)}
+.opt.sel .l{color:var(--accent)}
+.score{font:800 3.2rem/1 var(--display);font-variant-numeric:tabular-nums}
+.pill{display:inline-block;font:700 .8rem var(--body);letter-spacing:.06em;text-transform:uppercase;padding:5px 10px;border-radius:999px}
+.pill.pass{background:var(--accent-soft);color:var(--accent)}
+.pill.fail{background:var(--bad-soft);color:var(--bad)}
+.record{border:2px solid var(--accent);border-radius:10px;padding:18px;display:grid;grid-template-columns:auto 1fr;gap:8px 16px}
+.record dt{color:var(--muted);font-size:.9rem}
+.record dd{margin:0;font-weight:600;min-width:0;overflow-wrap:anywhere}
+.code{font:500 1.35rem var(--mono);letter-spacing:.06em;color:var(--accent)}
+.review{display:flex;flex-direction:column;gap:10px}
+.review div{border-left:3px solid var(--bad);padding:4px 0 4px 12px}
+.ok{color:var(--accent);font-weight:700}.no{color:var(--bad);font-weight:700}
+footer{font-size:.85rem;color:var(--muted);text-align:center}
+footer a{color:var(--muted)}
+@media (prefers-reduced-motion:reduce){.bar>i{transition:none}}
+:root{--ink:#26403a;--ink2:#8aa39c;--ill-bg:#e6f1ee;--blood:#c62828;--sun:#f2b705;--water:#2f86d0}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--ink:#d3e4df;--ink2:#6f8a83;--ill-bg:#1a2925;--blood:#ef5350;--sun:#f5c542;--water:#6fb3f0}}
+:root[data-theme="dark"]{--ink:#d3e4df;--ink2:#6f8a83;--ill-bg:#1a2925;--blood:#ef5350;--sun:#f5c542;--water:#6fb3f0}
+.ill{background:var(--ill-bg);border-radius:10px;padding:8px;display:flex;justify-content:center}
+.ill svg{width:100%;max-width:440px;height:auto;display:block;direction:ltr}
+svg .ln{stroke:var(--ink);stroke-width:11;stroke-linecap:round;stroke-linejoin:round;fill:none}
+svg .cs{stroke:var(--ink2)} svg .thin{stroke-width:4}
+svg .hd{fill:var(--ink)} svg .hd2{fill:var(--ink2)} svg .ac{fill:var(--accent)} svg .acs{stroke:var(--accent)}
+svg .af{fill:var(--accent-fg)} svg .rd{fill:var(--blood)} svg .yl{fill:var(--sun)} svg .bl{fill:var(--water)}
+svg .pl{fill:var(--plate);stroke:var(--line);stroke-width:2} svg .gd{stroke:var(--line);stroke-width:3}
+svg .ray{stroke:var(--sun);stroke-width:5;stroke-linecap:round}
+svg .st{fill:var(--ill-bg);font:700 13px var(--body)} svg .sti{fill:var(--ink);font:700 15px var(--body)}
+.push{transition:none}
+@keyframes press{50%{transform:translateY(8px)}}
+.loop .push{animation:press .545s ease-in-out infinite}
+.push.go{animation:press .22s ease-out}
+.presser{transition:transform .15s}.presser.down{transform:translateY(6px)}
+.stain{transform-box:fill-box;transform-origin:center}
+@keyframes drop{0%{transform:translateY(0);opacity:1}100%{transform:translateY(46px);opacity:0}}
+.drop{animation:drop 1.05s linear infinite}.d2{animation-delay:.35s}.d3{animation-delay:.7s}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spin{transform-origin:70px 52px;animation:spin 24s linear infinite}
+@keyframes rise{from{transform:scaleY(.45)}to{transform:scaleY(1)}}
+.merc{transform-box:fill-box;transform-origin:bottom;animation:rise 2.6s ease-in-out infinite alternate}
+@keyframes draw{from{stroke-dashoffset:34}to{stroke-dashoffset:0}}
+.tick{stroke-dasharray:34;animation:draw .5s ease-out both}.t1{animation-delay:.4s}.t2{animation-delay:.8s}.t3{animation-delay:1.2s}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.shake{animation:shake .3s}
+.act{border:2px dashed var(--accent);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.act-h{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.act-state{font-size:.85rem;font-weight:700;color:var(--muted)}.act-state.ok{color:var(--accent)}
+.act-msg{min-height:1.5em;font-weight:600;margin:0}.act-msg.good{color:var(--accent)}.act-msg.bad{color:var(--bad)}
+.act-body{display:flex;flex-direction:column;gap:12px}
+.slots{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px}
+.slots li{border:1px dashed var(--line);border-radius:8px;padding:10px;min-height:48px;display:flex;gap:10px;align-items:center;font-weight:600}
+.slots li span{font:600 .8rem var(--mono);color:var(--muted)}
+.slots li.fill{border-style:solid;border-color:var(--accent);background:var(--accent-soft)}
+.tiles{display:flex;flex-wrap:wrap;gap:8px}
+.gwrap{display:flex;flex-direction:column;gap:4px}
+.gauge{position:relative;height:14px;border-radius:7px;background:var(--line);margin-inline:6px}
+.gauge .zone{position:absolute;top:0;bottom:0;left:40%;width:20%;background:var(--accent);opacity:.45;border-radius:7px}
+.gauge i{position:absolute;top:-5px;width:4px;height:24px;margin-left:-2px;background:var(--fg);border-radius:2px;left:0;transition:left .2s}
+.gl{position:relative;height:1.3em;font-size:.78rem;color:var(--muted);margin-inline:6px;font-variant-numeric:tabular-nums}
+.gl span{position:absolute;transform:translateX(-50%)}
+.gl span:first-child{transform:none}.gl span:last-child{transform:translateX(-100%)}
+button.big{font-size:1.2rem;padding:20px;width:100%;touch-action:manipulation;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.beat{width:14px;height:14px;border-radius:50%;background:var(--line)}
+@keyframes beat{from{background:var(--accent);transform:scale(1.4)}to{background:var(--line);transform:scale(1)}}
+.beat.on{animation:beat .3s ease-out}
+.sortcard{border:1px solid var(--line);border-radius:8px;padding:16px;font-weight:600;font-size:1.08rem;text-align:center;background:var(--bg)}
+.sortcard.sc{text-align:start;font-weight:400}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.two button{padding:14px 8px}
+.opt.sel:disabled{opacity:1}
+.lockhint{font-size:.9rem;color:var(--muted);margin:0}
+.passmark{width:64px;height:64px}
+.passmark path{stroke:var(--accent-fg);stroke-width:5;fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:40;animation:draw2 .6s .2s ease-out both}
+@keyframes draw2{from{stroke-dashoffset:40}to{stroke-dashoffset:0}}
+@media (prefers-reduced-motion:reduce){.loop .push,.push.go,.drop,.spin,.merc,.tick,.shake,.beat.on,.passmark path{animation:none}.presser{transition:none}}
+:root{--lowc:#2e9d5b;--medc:#e0b100;--highc:#ea7a1a;--vhighc:#c62828}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--lowc:#3fbf74;--medc:#e8c23a;--highc:#f39243;--vhighc:#ef5350}}
+:root[data-theme="dark"]{--lowc:#3fbf74;--medc:#e8c23a;--highc:#f39243;--vhighc:#ef5350}
+figure.photo{margin:0;display:flex;flex-direction:column;gap:6px}
+figure.photo a{display:block;border-radius:10px;overflow:hidden;background:var(--ill-bg)}
+figure.photo img{display:block;width:100%;height:auto;max-height:340px;object-fit:contain;background:var(--ill-bg)}
+figure.photo figcaption{font-size:.85rem;color:var(--muted)}
+.sortimg{display:block;width:100%;max-height:220px;object-fit:contain;border-radius:8px;margin-bottom:10px;background:var(--ill-bg)}
+.multi{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px}
+.multi button{padding:14px 8px}
+.mx{display:grid;grid-template-columns:auto repeat(5,minmax(0,1fr));gap:4px;direction:ltr;font-variant-numeric:tabular-nums}
+.mx .ax{font-size:.8rem;color:var(--muted);display:flex;align-items:center;justify-content:center;text-align:center;min-height:30px;padding:2px}
+.mx button.cell{padding:0;min-height:44px;border-radius:6px;font:700 .95rem var(--body);border:2px solid transparent;color:var(--fg)}
+.mx .b1{background:var(--lowc);background:color-mix(in srgb,var(--lowc) 55%,var(--surface))}
+.mx .b2{background:var(--medc);background:color-mix(in srgb,var(--medc) 60%,var(--surface))}
+.mx .b3{background:var(--highc);background:color-mix(in srgb,var(--highc) 65%,var(--surface))}
+.mx .b4{background:var(--vhighc);background:color-mix(in srgb,var(--vhighc) 70%,var(--surface));color:#fff}
+.mx button.cell.hit{border-color:var(--fg)}
+.mxlab{display:flex;justify-content:space-between;font-size:.8rem;color:var(--muted);gap:8px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:.82rem;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.task{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:12px 14px;font-weight:600}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.lad-read{display:flex;justify-content:space-between;font-variant-numeric:tabular-nums;font-weight:600;gap:8px;flex-wrap:wrap}
+svg .wall{fill:var(--ink2)} svg .rail{stroke:var(--accent);stroke-width:5;stroke-linecap:round} svg .rung{stroke:var(--accent);stroke-width:3}
+svg .dim{stroke:var(--muted);stroke-width:1.5;stroke-dasharray:4 4;fill:none} svg .lbl{fill:var(--ink);font:600 12px var(--body)}
+svg .fl1{fill:var(--blood)} svg .fl2{fill:var(--sun)} svg .smk{fill:var(--ink2);opacity:.55}
+@keyframes flick{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.08) translateY(-2px)}}
+.flick{transform-box:fill-box;transform-origin:bottom;animation:flick .9s ease-in-out infinite}
+@keyframes drift{from{transform:translateX(0)}to{transform:translateX(18px)}}
+.drift{animation:drift 3s ease-in-out infinite alternate}
+.home{font-weight:600}
+@media (prefers-reduced-motion:reduce){.flick,.drift{animation:none}}
+</style></head><body>
+<div class="wrap">
+  <header class="brand"><img class="emblem" src="img/emblem.png" alt="" width="44" height="44">
+    <div><h1>General EHS Awareness</h1><p>RIM-HSE · e-learning with final assessment</p></div></header>
+  <main id="app"></main>
+  <footer>Pass mark 80% · This online course is awareness training and does not replace practical training on site. · <a href="#verify">Trainer: verify a code</a> · <a href="ehs-ar.html" lang="ar">العربية</a> · <a href="ehs-fr.html" lang="fr">Français</a> · <a class="home" href="index.html">All courses</a></footer>
+</div>
+<script>
+const C={"salt": "RIMHSE-EHS-2026", "course": "General EHS Awareness", "U": {"before": "Before you begin", "enterDetails": "Enter your details", "intro": "Your name and ID appear on your completion record. Use the same spelling you want on your certificate. The course has {n} short lessons and a {q}-question assessment. You need {p}% ({need} correct) to pass.", "fullName": "Full name", "idNum": "Employee or ID number", "company": "Company", "start": "Start the course", "lessonOf": "Lesson {i} of {n}", "back": "Back", "nextLesson": "Next lesson", "toAssessment": "Go to assessment", "finalEyebrow": "Final assessment", "finalTitle": "{q} questions, pass mark {need}/{q}", "rules": ["Choose one answer per question. You can go back and change answers before submitting.", "Questions are picked at random, so a retake will be different.", "If you pass, you will get a completion record with a verification code. Send it to your trainer."], "review": "Review lessons", "startQuiz": "Start assessment", "qOf": "Question {i} of {n}", "answered": "{k} answered", "submit": "Submit answers", "next": "Next", "answerAll": "Answer all questions to submit. Unanswered:", "passed": "Passed", "correctOf": "{k} of {n} correct", "recordTitle": "Completion record", "dName": "Name", "dId": "ID", "dCompany": "Company", "dCourse": "Course", "dScore": "Score", "dDate": "Date", "dCode": "Verification code", "sendRecord": "Take a screenshot of this record, or tap Copy, and send it on WhatsApp to your trainer: +222 46 69 18 35. Your trainer will call you to ask a few questions before issuing your certificate.", "copy": "Copy record as text", "copied": "Copied. Paste it into WhatsApp.", "copyFail": "Copy is not available here. Please take a screenshot.", "notPassed": "Not passed", "correctNeed": "{k} of {n} correct. You need {need}.", "retryText": "Review the questions below, go back over the lessons, then try again. The retake uses a new set of questions.", "yourAnswer": "Your answer:", "rightAnswer": "Correct:", "retake": "Retake assessment", "trainerOnly": "Trainer only", "verifyTitle": "Verify a completion code", "verifyIntro": "Type the details exactly as shown on the trainee's completion record. Codes from the Arabic, English and French versions of this course are all accepted.", "vScore": "Score % (number only)", "vDate": "Date (YYYY-MM-DD)", "backCourse": "Back to course", "check": "Check code", "valid": "Valid.", "validText": "This record was generated by this course for this trainee. You can issue the certificate.", "invalid": "Does not match.", "invalidText": "Check the spelling of the name and ID, the score and the date. If they are correct, the record may have been edited.", "activity": "Activity", "required": "Complete to continue", "complete": "Completed ✓", "correct": "Correct.", "notQuite": "Not quite. Read the lesson again and try another answer.", "wrongThis": "Not correct. The answer is: {a}. You will see this one again.", "wrongOrder": "That step comes later. What comes before it?", "nextQ": "Next", "lockHint": "Finish the activity above to unlock the next lesson.", "enlarge": "Tap the image to open it full size", "sev": "Severity", "like": "Likelihood", "bands": ["Low (1–4)", "Medium (5–10)", "High (12–16)", "Very high (20–25)"], "mxTask": "Severity {s} × Likelihood {l}: tap the right cell.", "mxRes": "Risk = {s} × {l} = {r}: {b}.", "mxWrong": "That cell is Severity {s} × Likelihood {l}. Check the row and the column.", "ladAria": "Distance of the ladder foot from the wall", "ladCheck": "Check my ladder", "ladAngle": "Angle: {a}°", "ladRatio": "1 out : {r} up", "ladGood": "Good angle: about 1 out for every 4 up (75°).", "ladShallow": "Too shallow. The foot could slide out. Move it closer to the wall.", "ladSteep": "Too steep. The ladder could tip backwards. Move the foot away from the wall.", "ladNot": "Not yet. Aim for 1 out for every 4 up.", "footer": "Pass mark 80% · This online course is awareness training and does not replace practical training on site.", "verifyLink": "Trainer: verify a code", "allCourses": "All courses", "portalTitle": "Safety Awareness Training", "portalSub": "Choose a course. Each course has short lessons, interactive activities and a final assessment (pass mark 80%).", "open": "Open course", "lessons": "lessons"}, "qcount": 15};
+const LESSONS=[{"t": "Safety first", "img": "ra-stop-poster.jpg", "poster": true, "b": ["Safety first means that when safety and production conflict, safety always wins. Production never comes first.", "Anyone may stop work that is unsafe. The HSE manager and the site supervisor have the authority to stop any work that breaks the safety rules.", "Never work under the influence of alcohol or drugs, including medicines that make you drowsy.", "Report every incident, near miss and unsafe condition, even if no one was hurt.", "Respect the site rules and the client's rules. If you do not understand a rule, ask before you start."], "k": "Safety before production. Everyone has the right to stop unsafe work."}, {"t": "Who may work on site", "img": "wah-climb.jpg", "b": ["Only people who are trained and qualified for the task, with valid certificates, licence and safety passport, and with complete PPE, may work on site.", "Work at height team: 2 workers trained for work at height (so one can rescue the other), 1 trained in first aid, 1 in fire fighting, 1 in risk assessment and 1 in electrical safety.", "Ground work team: at least 2 people, with training in first aid, fire fighting, risk assessment and electrical safety.", "Electrical work: always 2 people, and at least one of them a certified electrician.", "Training alone is not enough: the worker must also be competent and fit for the job on the day."], "k": "Right people, right training, right certificates, on every site."}, {"t": "PPE on site", "img": "el-ppe-poster.jpg", "poster": true, "b": ["On all site work, not only at height: safety helmet, safety shoes, high-visibility vest, mechanical gloves and safety glasses.", "Electrical work: insulating gloves rated for the voltage, as well as the basic PPE. Mechanical gloves do not protect against electricity.", "Work at height: full-body harness (EN 361, EN 358, EN 813) with a double shock-absorbing lanyard, attached to fixed anchor points on the tower, and a helmet with a chin strap.", "Inspections: the team checks its equipment every day before work, the safety supervisor checks it on site, and an approved provider inspects it every year.", "Damaged equipment is removed from service and replaced, never repaired on site."], "k": "Complete PPE, checked every day before work."}, {"t": "Permit to work and risk assessment", "img": "ra-before-after-poster.jpg", "poster": true, "b": ["The permit to work and the risk assessment are prepared before work starts. Never after the work, even when you are busy.", "The first step is to identify the hazards of the job and of the site.", "The whole team takes part in the risk assessment, not only the site engineer.", "It covers the journey, the site location and area, the time on site, the weather, the environment, the team's health and any ladders or lifting.", "Risk = Severity × Probability. When conditions change, stop and re-assess."], "k": "No permit, no risk assessment: no work."}, {"t": "Work at height rules", "img": "wah-anchor-poster.jpg", "poster": true, "b": ["Only trained and qualified workers climb. At least 2 trained climbers are on site so that one can rescue the other.", "Stay connected to the fall protection system at all times. A ladder cage is not fall protection.", "Never throw tools or materials from the tower. Use tool bags and hand lines, and tie tools to your harness.", "Nobody walks or stands under the tower while work is going on. Mark an exclusion zone.", "The safe system of work considers the surroundings, the weather and light, and the team's health. Stop in strong wind, rain or lightning."], "k": "100% tie-off · no throwing tools · nobody under the tower."}, {"t": "Electrical work rules", "img": "el-loto-poster.jpg", "poster": true, "b": ["Electrical work is done by 2 people, one of whom is a certified electrician.", "Remove watches, rings, necklaces and other metal jewellery before electrical work.", "Wear insulating gloves rated for the voltage, with the basic site PPE.", "Isolate, lock, tag and test for dead before touching any conductor.", "Never work on live equipment unless it is specifically authorised and planned."], "k": "Two people · no jewellery · isolate and test."}, {"t": "Driving safety", "svg": "car", "b": ["Drivers need defensive driving training, a valid licence, and must pass drug and alcohol tests.", "Everyone wears a seat belt, in the front and in the back. Never use a mobile phone while driving: stop safely first.", "Respect the speed limits of the road and of the client. Never drive at high speed.", "Rest at least 8 hours between shifts, take regular breaks on long journeys, and stop when you feel tired. Avoid night driving where possible.", "The vehicle must have at least 2 airbags, a seat belt for every seat, a fire extinguisher, a first aid kit, good tyres (changed when damaged) and GPS tracking."], "k": "Seat belt · no phone · speed limits · rest."}, {"t": "Fire and emergencies on site", "img": "fi-react-poster.jpg", "poster": true, "b": ["Every team member knows the emergency and evacuation plan, the assembly point and the emergency numbers before work starts.", "Fire extinguishers are accessible, inspected and kept clear.", "Extinguishers are used only on small fires and only by trained workers. Nobody fights a fire without training.", "In an emergency, follow the emergency steps: raise the alarm, make the area safe, give first aid, call for help.", "Heat stress is a real danger on sites: drink water often, rest in the shade and watch your colleagues."], "k": "Know the plan, keep extinguishers clear, small fires only, trained people only."}];
+const QUESTIONS=[{"q": "Any employee who does electrical work must be:", "o": ["Unlicensed", "Trained and qualified for electrical work", "Trained to work at height only", "Trained in fire fighting only"], "a": 1}, {"q": "Risk is the product of ___ × ___", "o": ["Severity and probability", "Severity and type", "Risk and control", "Probability and time"], "a": 0}, {"q": "Which of these are site safety rules?", "o": ["Do not walk or stand under the tower during work", "Do not let tools fall from height", "Be trained and qualified for electrical work and work at height", "All of the above"], "a": 3}, {"q": "What is the minimum team for work at height?", "o": ["2 work at height, 1 fire fighting, 1 first aid, 1 risk assessment, 1 electrical", "1 work at height, 1 fire fighting, 1 first aid, 1 electrical", "2 work at height and 1 first aid only", "1 work at height and 2 electrical"], "a": 0}, {"q": "When is the permit to work prepared?", "o": ["Before work", "After work", "During work", "It is not needed"], "a": 0}, {"q": "What is the minimum rest for drivers between shifts?", "o": ["10 hours", "12 hours", "8 hours", "No minimum"], "a": 2}, {"q": "Which PPE is required for electrical work?", "o": ["Safety shoes only", "Harness and glasses", "Insulating safety gloves", "No PPE needed"], "a": 2}, {"q": "Which equipment do you wear for work at height?", "o": ["Full-body harness", "Double lanyard with shock absorber", "Helmet with chin strap", "All of the above"], "a": 3}, {"q": "How many workers trained for work at height must be on site for rescue?", "o": ["2", "1", "3", "4"], "a": 0}, {"q": "For ground work, the training matrix must include:", "o": ["1 first aid, 1 fire fighting, 1 risk assessment, 1 electrical safety, 1 work at height", "1 first aid, 1 fire fighting, 1 risk assessment, 1 electrical safety", "2 fire fighting and 2 electrical safety only", "1 first aid only"], "a": 1}, {"q": "Which of these is NOT dangerous?", "o": ["Driving with adequate breaks", "Night work", "Heat stress", "Not wearing a seat belt"], "a": 0}, {"q": "For electrical work, the team must be:", "o": ["One person", "Two people, one of whom is a certified electrician", "Three people without electrical training", "Two people without electrical training"], "a": 1}, {"q": "Who checks the safety equipment?", "o": ["The team, every day before work", "The safety supervisor", "An approved provider, every year", "All of the above"], "a": 3}, {"q": "What must a site vehicle have?", "o": ["At least 2 airbags", "A fire extinguisher", "A seat belt for every seat", "All of the above"], "a": 3}, {"q": "Who takes part in the risk assessment?", "o": ["Only the site engineer", "Everyone involved in the work", "Only the HSE manager", "Nobody, if the team is experienced"], "a": 1}, {"q": "You are very busy. When do you do the risk assessment?", "o": ["After the work", "Always before the work starts", "Only if the client asks", "Never"], "a": 1}, {"q": "Is the cage around a tower ladder enough to protect you from falling?", "o": ["Yes, no harness is needed", "No, you must stay connected to a fall protection system", "Yes, if you climb slowly", "Only at night"], "a": 1}, {"q": "Can you use your mobile phone while driving?", "o": ["Yes, for up to 10 minutes", "Yes, if the road is empty", "No, stop in a safe place first", "Only to send messages"], "a": 2}, {"q": "What must you remove before electrical work?", "o": ["Watches, rings and necklaces", "Your helmet", "Your safety shoes", "Your high-visibility vest"], "a": 0}, {"q": "Can the HSE manager stop work after an incident?", "o": ["No, only the project manager can", "Yes, and anyone can stop unsafe work", "Only with the client's approval", "No, work must continue"], "a": 1}, {"q": "What does \"safety first\" mean?", "o": ["Production comes before safety", "When safety and production conflict, safety comes first", "Safety only applies when the client visits", "Safety applies only at height"], "a": 1}, {"q": "Which standards must a full-body harness meet?", "o": ["EN 361, EN 358, EN 813", "ISO 9001", "EN 388", "No standard"], "a": 0}, {"q": "Can you work under the influence of alcohol or drugs?", "o": ["Yes, in small amounts", "Never", "Only after lunch", "Only for ground work"], "a": 1}, {"q": "Can you put out a fire without prior training?", "o": ["Yes, any fire", "No, extinguishers are for trained people and small fires only", "Yes, if it is a large fire", "Only electrical fires"], "a": 1}];
+const ACTS={"0": {"type": "sort", "prompt": "Safety first or production first?", "labels": ["Safety first", "Production first"], "items": [["Stopping a climb because the wind is too strong", 0], ["Skipping the risk assessment to finish faster", 1], ["Waiting for a missing harness before climbing", 0], ["Driving faster to reach a site on time", 1], ["Reporting a near miss", 0], ["Working while very tired to finish the job", 1]], "done": "All correct. When in doubt, safety wins."}, "1": {"type": "scenario", "prompt": "Is the team complete?", "items": [{"s": "A tower job is planned with only one climber.", "o": ["Fine if he is experienced", "Not allowed: at least 2 trained climbers for rescue", "Fine if the supervisor watches from the ground"], "a": 1, "w": "One climber cannot rescue himself."}, {"s": "An electrical job: two workers, neither is a certified electrician.", "o": ["Allowed", "Not allowed: one must be a certified electrician", "Allowed if they wear gloves"], "a": 1, "w": "Two people, one certified electrician."}, {"s": "Ground work: the team has first aid, fire fighting and electrical safety, but nobody trained in risk assessment.", "o": ["The team is complete", "The team is incomplete: risk assessment training is missing", "Risk assessment is only for the engineer"], "a": 1, "w": "First aid, fire fighting, risk assessment and electrical safety."}]}, "2": {"type": "sort", "prompt": "Is this PPE needed on all site work, or only for a specific task?", "labels": ["All site work", "Specific task"], "items": [["Safety helmet", 0], ["Safety shoes", 0], ["High-visibility vest", 0], ["Safety glasses", 0], ["Mechanical gloves", 0], ["Insulating gloves (electrical work)", 1], ["Full-body harness (work at height)", 1]], "done": "All correct. Basic PPE is for every job, not only at height."}, "3": {"type": "sort", "prompt": "True or false?", "labels": ["True", "False"], "items": [["Only the site engineer does the risk assessment", 1], ["The permit to work is prepared before work", 0], ["When busy, the risk assessment can be done after the work", 1], ["The risk assessment includes the weather", 0], ["Environmental hazards can be ignored", 1], ["Ladders are included in the risk assessment", 0]], "done": "All correct. Before the work, with the whole team."}, "4": {"type": "sort", "prompt": "Work at height: true or false?", "labels": ["True", "False"], "items": [["You must stay connected to fall protection at all times", 0], ["A ladder cage replaces fall protection", 1], ["Tools may be thrown down if the area is clear", 1], ["Nobody stands under the tower during work", 0], ["Two trained climbers must be on site for rescue", 0], ["Any trained person can climb, even if not competent", 1]], "done": "All correct. These rules save lives."}, "5": {"type": "scenario", "prompt": "What do you do?", "items": [{"s": "You are about to open an electrical cabinet. You are wearing your wedding ring and a watch.", "o": ["Keep them, they are small", "Remove them before starting", "Cover them with tape"], "a": 1, "w": "Metal jewellery can conduct current and cause burns."}, {"s": "Your colleague wants to start alone while you fetch the tester.", "o": ["Let him start", "Ask him to wait: electrical work is done by two people", "Start from the other side"], "a": 1, "w": "Never alone on electrical work."}, {"s": "Which gloves do you wear for electrical work?", "o": ["Mechanical work gloves", "Insulating gloves rated for the voltage", "No gloves for better grip"], "a": 1, "w": "Only insulating gloves protect against electricity."}]}, "6": {"type": "sort", "prompt": "Safe driving or not?", "labels": ["Safe", "Not safe"], "items": [["Everyone in the car wears a seat belt", 0], ["Answering the phone while driving", 1], ["8 hours of rest before the next shift", 0], ["Driving with a damaged tyre", 1], ["Stopping for a break on a long journey", 0], ["Driving fast to make up for lost time", 1], ["Vehicle with a fire extinguisher and first aid kit", 0]], "done": "All correct. Arrive alive."}, "7": {"type": "scenario", "prompt": "What do you do?", "items": [{"s": "A small fire starts in a generator area. You are not trained in fire fighting.", "o": ["Use the extinguisher anyway", "Raise the alarm and let a trained person act", "Throw sand without telling anyone"], "a": 1, "w": "Extinguishers are for trained people and small fires only."}, {"s": "A new team member does not know where the assembly point is.", "o": ["Show him before work starts", "He will follow the others", "It is not important"], "a": 0, "w": "Everyone knows the evacuation plan before work."}, {"s": "At midday a colleague is dizzy, with a headache, after hours in the sun.", "o": ["Tell him to keep working", "Move him to the shade, give water, inform the supervisor", "Give him an energy drink and continue"], "a": 1, "w": "Heat stress can quickly become serious."}]}};
+const SVG={"car": "<svg viewBox=\"0 0 320 170\" role=\"img\"><rect x=\"0\" y=\"132\" width=\"320\" height=\"26\" style=\"fill:var(--ink2);opacity:.35\"/><g class=\"drift\"><path d=\"M10 145 h40 M90 145 h40 M170 145 h40 M250 145 h40\" style=\"stroke:var(--plate);stroke-width:4;stroke-dasharray:0\"/></g><path class=\"ac\" d=\"M60 112 L84 76 Q90 68 100 68 L196 68 Q208 68 216 78 L240 104 L272 110 Q284 112 284 124 L284 128 Q284 132 280 132 L52 132 Q46 132 46 126 L46 120 Q46 112 60 112 Z\"/><path class=\"pl\" d=\"M94 104 L106 80 L150 80 L150 104 Z\"/><path class=\"pl\" d=\"M160 80 L198 80 Q204 80 208 86 L222 104 L160 104 Z\"/><path d=\"M128 84 L144 104\" style=\"stroke:var(--sun);stroke-width:4;stroke-linecap:round\"/><circle class=\"hd\" cx=\"96\" cy=\"132\" r=\"17\"/><circle class=\"pl\" cx=\"96\" cy=\"132\" r=\"7\"/><circle class=\"hd\" cx=\"236\" cy=\"132\" r=\"17\"/><circle class=\"pl\" cx=\"236\" cy=\"132\" r=\"7\"/><rect class=\"rd\" x=\"270\" y=\"114\" width=\"10\" height=\"6\" rx=\"2\"/></svg>"};
+const U=C.U, PASS=0.8, QCOUNT=Math.min(C.qcount||10,QUESTIONS.length), NEED=Math.ceil(PASS*QCOUNT);
+const fmt=(s,o)=>String(s).replace(/\{(\w+)\}/g,(m,k)=>o[k]!==undefined?o[k]:m);
+const S={step:"start",name:"",id:"",company:"",lesson:0,qs:[],qi:0,ans:[],result:null};
+const app=document.getElementById("app");
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function norm(s){return String(s).trim().toUpperCase().replace(/\s+/g," ")}
+function hashCode(str){let h1=0x811c9dc5,h2=0x1b873593;for(let i=0;i<str.length;i++){const c=str.charCodeAt(i);h1=Math.imul(h1^c,16777619);h2=Math.imul(h2^c,2246822519)}
+ const v=((h1>>>0).toString(36)+(h2>>>0).toString(36)).toUpperCase().replace(/[^A-Z0-9]/g,"").padEnd(8,"X").slice(0,8);return v.slice(0,4)+"-"+v.slice(4)}
+function makeCode(name,id,score,date){return hashCode([C.salt,norm(name),norm(id),score,date].join("|"))}
+function today(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+const LET=U.letters||["A","B","C","D"];
+
+let CLEAN=null;const DONE=new Set();
+function runCleanup(){if(CLEAN){try{CLEAN()}catch(e){}CLEAN=null}}
+function unlock(){const b=document.getElementById("next");if(b)b.disabled=false;const h=document.getElementById("lockhint");if(h)h.hidden=true}
+function shakeEl(el){el.classList.remove("shake");void el.getBoundingClientRect();el.classList.add("shake")}
+
+function render(){
+ runCleanup();
+ if(location.hash==="#verify"){return renderVerify()}
+ ({start:renderStart,lesson:renderLesson,ready:renderReady,quiz:renderQuiz,result:renderResult})[S.step]();
+ window.scrollTo(0,0);
+}
+function media(L){
+ if(L.img)return `<figure class="photo"><a href="img/${L.img}" target="_blank" rel="noopener"><img src="img/${L.img}" alt="${esc(L.alt||L.t)}" loading="lazy"></a>${L.cap||L.poster?`<figcaption>${L.cap||""}${L.poster?(L.cap?" · ":"")+U.enlarge:""}</figcaption>`:""}</figure>`;
+ if(L.svg)return `<div class="ill" aria-hidden="true">${SVG[L.svg]}</div>`;
+ return "";
+}
+function renderStart(){
+ app.innerHTML=`<section class="panel">
+  <div class="logo-card"><img src="img/logo.png" alt="RIM-HSE"></div>
+  <span class="eyebrow">${U.before}</span>
+  <h2>${U.enterDetails}</h2>
+  <p class="muted">${fmt(U.intro,{n:LESSONS.length,q:QCOUNT,p:Math.round(PASS*100),need:NEED})}</p>
+  <form id="f" style="display:flex;flex-direction:column;gap:14px">
+   <label for="nm">${U.fullName}<input id="nm" type="text" autocomplete="name" required value="${esc(S.name)}"></label>
+   <label for="eid">${U.idNum}<input id="eid" type="text" dir="auto" required value="${esc(S.id)}"></label>
+   <label for="co">${U.company}<input id="co" type="text" value="${esc(S.company)}"></label>
+   <div class="row"><button class="primary" type="submit">${U.start}</button></div>
+  </form></section>`;
+ document.getElementById("f").addEventListener("submit",e=>{e.preventDefault();
+  S.name=document.getElementById("nm").value.trim();S.id=document.getElementById("eid").value.trim();S.company=document.getElementById("co").value.trim();
+  if(!S.name||!S.id)return;S.step="lesson";S.lesson=0;render()});
+}
+function renderLesson(){
+ const locked=!!ACTS[S.lesson]&&!DONE.has(S.lesson),L=LESSONS[S.lesson],n=LESSONS.length,pct=((S.lesson+1)/n)*100;
+ app.innerHTML=`<section class="panel">
+  <div class="meta"><span>${fmt(U.lessonOf,{i:S.lesson+1,n})}</span><span>${Math.round(pct)}%</span></div>
+  <div class="bar"><i style="width:${pct}%"></i></div>
+  <h2>${L.t}</h2>
+  ${media(L)}
+  <ul class="pts">${L.b.map(x=>`<li>${x}</li>`).join("")}</ul>
+  <div class="key">${L.k}</div>
+  ${L.c?`<div class="caution">${L.c}</div>`:""}
+  <div id="actBox"></div>
+  <div class="row end"><button id="prev" ${S.lesson===0?"disabled":""}>${U.back}</button>
+  <button class="primary" id="next" ${locked?"disabled":""}>${S.lesson===n-1?U.toAssessment:U.nextLesson}</button></div>${locked?`<p class="lockhint" id="lockhint">${U.lockHint}</p>`:""}</section>`;
+ document.getElementById("prev").onclick=()=>{S.lesson--;render()};
+ document.getElementById("next").onclick=()=>{if(S.lesson<n-1){S.lesson++}else{S.step="ready"}render()};
+ mountActivity(S.lesson,document.getElementById("actBox"));
+}
+function renderReady(){
+ app.innerHTML=`<section class="panel">
+  <span class="eyebrow">${U.finalEyebrow}</span>
+  <h2>${fmt(U.finalTitle,{q:QCOUNT,need:NEED})}</h2>
+  <ul class="pts">${U.rules.map(r=>`<li>${r}</li>`).join("")}</ul>
+  <div class="row end"><button id="rev">${U.review}</button><button class="primary" id="go">${U.startQuiz}</button></div></section>`;
+ document.getElementById("rev").onclick=()=>{S.step="lesson";S.lesson=0;render()};
+ document.getElementById("go").onclick=startQuiz;
+}
+function startQuiz(){
+ S.qs=shuffle(QUESTIONS).slice(0,QCOUNT).map(q=>{const idx=shuffle(q.o.map((_,i)=>i));return{q:q.q,o:idx.map(i=>q.o[i]),a:idx.indexOf(q.a)}});
+ S.ans=new Array(QCOUNT).fill(null);S.qi=0;S.step="quiz";render();
+}
+function renderQuiz(){
+ const Q=S.qs[S.qi],pct=((S.qi+1)/QCOUNT)*100,last=S.qi===QCOUNT-1,done=S.ans.every(a=>a!==null);
+ app.innerHTML=`<section class="panel">
+  <div class="meta"><span>${fmt(U.qOf,{i:S.qi+1,n:QCOUNT})}</span><span>${fmt(U.answered,{k:S.ans.filter(a=>a!==null).length})}</span></div>
+  <div class="bar"><i style="width:${pct}%"></i></div>
+  <h3 style="font-size:1.2rem">${Q.q}</h3>
+  <div class="opts" role="radiogroup">${Q.o.map((o,i)=>`<button class="opt ${S.ans[S.qi]===i?"sel":""}" role="radio" aria-checked="${S.ans[S.qi]===i}" data-i="${i}"><span class="l">${LET[i]}</span><span>${o}</span></button>`).join("")}</div>
+  <div class="row end"><button id="prev" ${S.qi===0?"disabled":""}>${U.back}</button>
+  ${last?`<button class="primary" id="sub" ${done?"":"disabled"}>${U.submit}</button>`:`<button class="primary" id="next" ${S.ans[S.qi]===null?"disabled":""}>${U.next}</button>`}</div>
+  ${last&&!done?`<p class="muted">${U.answerAll} ${S.ans.map((a,i)=>a===null?i+1:null).filter(Boolean).join(U.sep||", ")}</p>`:""}
+ </section>`;
+ app.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{S.ans[S.qi]=+b.dataset.i;render()});
+ document.getElementById("prev").onclick=()=>{S.qi--;render()};
+ const nx=document.getElementById("next");if(nx)nx.onclick=()=>{S.qi++;render()};
+ const sb=document.getElementById("sub");if(sb)sb.onclick=submit;
+}
+function submit(){
+ const correct=S.qs.reduce((n,q,i)=>n+(S.ans[i]===q.a?1:0),0);
+ const pct=Math.round(correct/QCOUNT*100),pass=correct/QCOUNT>=PASS,date=today();
+ S.result={correct,pct,pass,date,code:pass?makeCode(S.name,S.id,pct,date):null};
+ S.step="result";render();
+}
+function renderResult(){
+ const R=S.result;
+ if(R.pass){
+  app.innerHTML=`<section class="panel">
+   <svg class="passmark" viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="25" style="fill:var(--accent)"/><path d="M15 27 l7 7 l15 -15"/></svg>
+   <span class="pill pass">${U.passed}</span>
+   <div class="row" style="gap:16px;align-items:baseline"><span class="score">${R.pct}%</span><span class="muted">${fmt(U.correctOf,{k:R.correct,n:QCOUNT})}</span></div>
+   <h2>${U.recordTitle}</h2>
+   <dl class="record">
+    <dt>${U.dName}</dt><dd>${esc(S.name)}</dd>
+    <dt>${U.dId}</dt><dd dir="auto">${esc(S.id)}</dd>
+    ${S.company?`<dt>${U.dCompany}</dt><dd>${esc(S.company)}</dd>`:""}
+    <dt>${U.dCourse}</dt><dd>${C.course}</dd>
+    <dt>${U.dScore}</dt><dd>${R.pct}% (${R.correct}/${QCOUNT})</dd>
+    <dt>${U.dDate}</dt><dd dir="ltr" style="text-align:start">${R.date}</dd>
+    <dt>${U.dCode}</dt><dd class="code">${R.code}</dd>
+   </dl>
+   <div class="key">${U.sendRecord}</div>
+   <div class="row"><button id="copy">${U.copy}</button><span id="cpmsg" class="muted"></span></div>
+  </section>`;
+  const txt=`${C.course}\n${U.dName}: ${S.name}\n${U.dId}: ${S.id}\n${S.company?U.dCompany+": "+S.company+"\n":""}${U.dScore}: ${R.pct}% (${R.correct}/${QCOUNT})\n${U.dDate}: ${R.date}\n${U.dCode}: ${R.code}`;
+  document.getElementById("copy").onclick=()=>{const m=document.getElementById("cpmsg");
+   try{navigator.clipboard.writeText(txt).then(()=>m.textContent=U.copied).catch(()=>m.textContent=U.copyFail)}catch(e){m.textContent=U.copyFail}};
+ }else{
+  const wrong=S.qs.map((q,i)=>({q,i})).filter(x=>S.ans[x.i]!==x.q.a);
+  app.innerHTML=`<section class="panel">
+   <span class="pill fail">${U.notPassed}</span>
+   <div class="row" style="gap:16px;align-items:baseline"><span class="score">${R.pct}%</span><span class="muted">${fmt(U.correctNeed,{k:R.correct,n:QCOUNT,need:NEED})}</span></div>
+   <p>${U.retryText}</p>
+   <div class="review">${wrong.map(x=>`<div><p>${x.q.q}</p><p class="muted"><span class="no">${U.yourAnswer}</span> ${x.q.o[S.ans[x.i]]}<br><span class="ok">${U.rightAnswer}</span> ${x.q.o[x.q.a]}</p></div>`).join("")}</div>
+   <div class="row end"><button id="rev">${U.review}</button><button class="primary" id="retry">${U.retake}</button></div>
+  </section>`;
+  document.getElementById("rev").onclick=()=>{S.step="lesson";S.lesson=0;render()};
+  document.getElementById("retry").onclick=startQuiz;
+ }
+}
+function renderVerify(){
+ app.innerHTML=`<section class="panel">
+  <span class="eyebrow">${U.trainerOnly}</span>
+  <h2>${U.verifyTitle}</h2>
+  <p class="muted">${U.verifyIntro}</p>
+  <form id="vf" style="display:flex;flex-direction:column;gap:14px">
+   <label for="vn">${U.fullName}<input id="vn" type="text" required></label>
+   <label for="vi">${U.dId}<input id="vi" type="text" dir="auto" required></label>
+   <label for="vs">${U.vScore}<input id="vs" type="text" inputmode="numeric" dir="ltr" required></label>
+   <label for="vd">${U.vDate}<input id="vd" type="text" dir="ltr" placeholder="2026-10-21" required></label>
+   <label for="vc">${U.dCode}<input id="vc" type="text" dir="ltr" placeholder="XXXX-XXXX" required></label>
+   <div class="row end"><button type="button" id="back">${U.backCourse}</button><button class="primary" type="submit">${U.check}</button></div>
+  </form>
+  <div id="vr" aria-live="polite"></div></section>`;
+ document.getElementById("back").onclick=()=>{history.replaceState(null,"",location.pathname+location.search);render()};
+ document.getElementById("vf").addEventListener("submit",e=>{e.preventDefault();
+  const g=id=>document.getElementById(id).value.trim();
+  const sc=parseInt(g("vs"),10),exp=makeCode(g("vn"),g("vi"),sc,g("vd")),got=g("vc").toUpperCase().replace(/\s/g,"");
+  const ok=exp===got&&sc>=PASS*100;
+  document.getElementById("vr").innerHTML=ok?`<div class="key"><span class="ok">${U.valid}</span> ${U.validText}</div>`:`<div class="caution"><b>${U.invalid}</b> ${U.invalidText}</div>`;
+ });
+}
+
+/* ---------- activities ---------- */
+function mountActivity(i,box){
+ const A=ACTS[i];if(!A||!box)return;
+ box.innerHTML=`<div class="act"><div class="act-h"><span class="eyebrow">${U.activity}</span><span class="act-state ${DONE.has(i)?"ok":""}">${DONE.has(i)?U.complete:U.required}</span></div><p>${A.prompt}</p><div class="act-body"></div><p class="act-msg" aria-live="polite"></p></div>`;
+ const body=box.querySelector(".act-body"),msg=box.querySelector(".act-msg"),st=box.querySelector(".act-state");
+ const say=(t,c)=>{msg.textContent=t;msg.className="act-msg "+(c||"")};
+ const fin=t=>{DONE.add(i);say(t,"good");st.textContent=U.complete;st.classList.add("ok");unlock()};
+ ({order:actOrder,sort:actSort,scenario:actScenario,matrix:actMatrix,ladder:actLadder})[A.type](A,body,say,fin);
+}
+function actOrder(A,body,say,fin){
+ let pos=0;const items=shuffle(A.items.map((t,i)=>({t,i})));
+ body.innerHTML=`<ol class="slots">${A.items.map((_,i)=>`<li><span>${i+1}</span><b></b></li>`).join("")}</ol><div class="tiles">${items.map(x=>`<button type="button" class="tile" data-i="${x.i}">${x.t}</button>`).join("")}</div>`;
+ const slots=body.querySelectorAll(".slots li");
+ body.querySelectorAll(".tile").forEach(b=>b.onclick=()=>{
+  if(+b.dataset.i===pos){slots[pos].querySelector("b").textContent=b.textContent;slots[pos].classList.add("fill");b.hidden=true;pos++;
+   if(pos===A.items.length)fin(A.done);else say(U.correct,"good")}
+  else{shakeEl(b);say(A.wrong||U.wrongOrder,"bad")}});
+}
+function actSort(A,body,say,fin){
+ let q=shuffle(A.items.map((_,i)=>i)),okc=0;const total=A.items.length;
+ const draw=()=>{
+  if(!q.length){body.innerHTML=`<div class="sortcard">${total} / ${total} ✓</div>`;fin(A.done);return}
+  const it=A.items[q[0]];
+  body.innerHTML=`<div class="meta"><span>${okc} / ${total}</span></div><div class="sortcard">${it[2]?`<img class="sortimg" src="img/${it[2]}" alt="">`:""}${it[0]}</div><div class="${A.labels.length>2?"multi":"two"}">${A.labels.map((l,j)=>`<button type="button" class="sbtn" data-j="${j}">${l}</button>`).join("")}</div>`;
+  body.querySelectorAll(".sbtn").forEach(b=>b.onclick=()=>{
+   if(+b.dataset.j===it[1]){okc++;q.shift();say(U.correct+" "+(it[3]||(it[0]+": "+A.labels[it[1]])),"good")}
+   else{q.push(q.shift());say(fmt(U.wrongThis,{a:A.labels[it[1]]}),"bad")}
+   draw()});
+ };
+ draw();
+}
+function actScenario(A,body,say,fin){
+ let k=0;
+ const draw=()=>{const s=A.items[k];
+  body.innerHTML=`<div class="meta"><span>${k+1} / ${A.items.length}</span></div><div class="sortcard sc">${s.img?`<img class="sortimg" src="img/${s.img}" alt="">`:""}${s.s}</div><div class="opts">${s.o.map((o,j)=>`<button type="button" class="opt" data-j="${j}"><span>${o}</span></button>`).join("")}</div>`;
+  body.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
+   if(+b.dataset.j===s.a){b.classList.add("sel");body.querySelectorAll(".opt").forEach(x=>x.disabled=true);
+    if(k===A.items.length-1){fin(U.correct+" "+s.w)}
+    else{say(U.correct+" "+s.w,"good");const nb=document.createElement("button");nb.className="primary";nb.type="button";nb.textContent=U.nextQ;nb.onclick=()=>{k++;say("");draw()};body.appendChild(nb)}}
+   else{shakeEl(b);say(U.notQuite,"bad")}});
+ };
+ draw();
+}
+function band(r){return r<=4?1:r<=10?2:r<=16?3:4}
+function actMatrix(A,body,say,fin){
+ let k=0;
+ const grid=()=>{let h=`<div class="mx"><div class="ax"></div>${[1,2,3,4,5].map(l=>`<div class="ax">${l}</div>`).join("")}`;
+  for(let s=5;s>=1;s--){h+=`<div class="ax">${s}</div>`;for(let l=1;l<=5;l++){h+=`<button type="button" class="cell b${band(s*l)}" data-s="${s}" data-l="${l}" aria-label="${U.sev} ${s} × ${U.like} ${l}"></button>`}}
+  return h+"</div>"};
+ const draw=()=>{const t=A.tasks[k];
+  body.innerHTML=`<div class="meta"><span>${k+1} / ${A.tasks.length}</span></div><div class="task">${t.h}<br><span class="muted" style="font-weight:400">${fmt(U.mxTask,{s:t.s,l:t.l})}</span></div>
+  <div class="mxlab"><span>↓ ${U.sev}</span><span>${U.like} →</span></div>${grid()}
+  <div class="legend">${U.bands.map((b,j)=>`<span><i style="background:var(--${["lowc","medc","highc","vhighc"][j]})"></i>${b}</span>`).join("")}</div>`;
+  body.querySelectorAll(".cell").forEach(c=>c.onclick=()=>{
+   const s=+c.dataset.s,l=+c.dataset.l;
+   if(s===t.s&&l===t.l){c.classList.add("hit");c.textContent=s*l;body.querySelectorAll(".cell").forEach(x=>x.disabled=true);
+    const m=fmt(U.mxRes,{s,l,r:s*l,b:U.bands[band(s*l)-1]});
+    if(k===A.tasks.length-1)fin(m+" "+A.done);
+    else{say(m,"good");const nb=document.createElement("button");nb.className="primary";nb.type="button";nb.textContent=U.nextQ;nb.onclick=()=>{k++;say("");draw()};body.appendChild(nb)}}
+   else{shakeEl(c);say(fmt(U.mxWrong,{s,l}),"bad")}});
+ };
+ draw();
+}
+function actLadder(A,body,say,fin){
+ const H=140,X=250,G=180;
+ body.innerHTML=`<div class="ill"><svg viewBox="0 0 320 200" role="img"><rect class="wall" x="${X}" y="40" width="40" height="${G-40}"/><line class="gd" x1="10" y1="${G}" x2="310" y2="${G}"/><line class="gd" x1="${X}" y1="40" x2="310" y2="40"/><g id="lad"></g></svg></div>
+ <input type="range" id="ladr" min="8" max="120" value="96" dir="ltr" aria-label="${U.ladAria}">
+ <div class="lad-read"><span id="ang"></span><span id="rat"></span></div>
+ <button class="primary" type="button" id="ladc">${U.ladCheck}</button>`;
+ const r=body.querySelector("#ladr"),g=body.querySelector("#lad"),ang=body.querySelector("#ang"),rat=body.querySelector("#rat");
+ const ok=d=>{const a=Math.atan(H/d)*180/Math.PI;return a>=73&&a<=78};
+ const draw=()=>{const d=+r.value,fx=X-d,a=Math.atan(H/d)*180/Math.PI,len=Math.hypot(d,H),ux=d/len,uy=-H/len,ext=22;
+  const tx=X+ux*ext,ty=40+uy*ext,ox=-uy*6,oy=ux*6;let s="";
+  s+=`<line class="rail" x1="${fx-ox}" y1="${G-oy}" x2="${tx-ox}" y2="${ty-oy}"/><line class="rail" x1="${fx+ox}" y1="${G+oy}" x2="${tx+ox}" y2="${ty+oy}"/>`;
+  for(let t=14;t<len+ext;t+=14){const px=fx+ux*t,py=G+uy*t;s+=`<line class="rung" x1="${px-ox}" y1="${py-oy}" x2="${px+ox}" y2="${py+oy}"/>`}
+  s+=`<path class="dim" d="M${fx} ${G+10} H${X}"/><text class="lbl" x="${(fx+X)/2}" y="${G+22}" text-anchor="middle">1</text><text class="lbl" x="${X-10}" y="${(G+40)/2}" text-anchor="end">${(H/d).toFixed(1)}</text>`;
+  g.innerHTML=s;ang.textContent=fmt(U.ladAngle,{a:Math.round(a)});rat.textContent=fmt(U.ladRatio,{r:(H/d).toFixed(1)});
+  say(ok(d)?U.ladGood:a<73?U.ladShallow:U.ladSteep,ok(d)?"good":"bad")};
+ r.addEventListener("input",draw);draw();
+ body.querySelector("#ladc").onclick=()=>{if(ok(+r.value))fin(A.done);else{shakeEl(r);say(U.ladNot,"bad")}};
+}
+window.addEventListener("hashchange",render);
+render();
+
+</script>
+</body></html>
